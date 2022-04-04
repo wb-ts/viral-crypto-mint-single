@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { connect , getSmartContract } from "./redux/blockchain/blockchainActions";
-import Web3EthContract from "web3-eth-contract";
+import axios from 'axios';
 import { fetchData } from "./redux/data/dataActions";
 import * as s from "./styles/globalStyles";
 import styled from "styled-components";
@@ -105,6 +105,7 @@ export const StyledLink = styled.a`
 function App() {
   const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
+  const MORALIS_API_KEY = '78KU4WCpkqjIAkGjSKbtRuYg7rjbfnEQkMtt6fLbVFh7chlqi3courfnXFjo461K';
   const data = useSelector((state) => state.data);
   const [mintedCount , setMintedCount] = useState(null);
   const [claimingNft, setClaimingNft] = useState(false);
@@ -197,26 +198,15 @@ function App() {
       },
     });
     const config = await configResponse.json();
-    const abiResponse = await fetch("/config/abi.json", {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
-    const abi = await abiResponse.json();
 
-    const { ethereum } = window;
-
-    Web3EthContract.setProvider(ethereum);
-
-    const SmartContractObj = new Web3EthContract(
-      abi,
-      config.CONTRACT_ADDRESS
-    );
+    let res = await axios.get(`https://deep-index.moralis.io/api/v2/nft/${config.CONTRACT_ADDRESS}`, {
+        headers: {
+            "Content-type": "application/json",
+            "X-API-Key": MORALIS_API_KEY
+        }
+    })
     
-    let mintedCount = await SmartContractObj.methods.minted().call();
-
-    console.log(mintedCount);
+    let mintedCount = res.data.result[0].amount;
 
     setMintedCount(mintedCount);
 
