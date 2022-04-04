@@ -1,0 +1,19 @@
+{
+  "CONTRACT_ADDRESS": "0x9dd13E8Fce9e6dE73D2Df9e3411C93F04E28AF2B",
+  "SCAN_LINK": "https://etherscan.io/address/0x9dd13e8fce9e6de73d2df9e3411c93f04e28af2b",
+  "NETWORK": {
+    "NAME": "Ethereum Mainnet",
+    "SYMBOL": "ETH",
+    "ID": 1
+  },
+  "NFT_NAME": "Viral Crypto Sentinel",
+  "SYMBOL1": "The Sentinel",
+  "MAX_SUPPLY1": 1200,
+  "NFT1_ID": 0,  
+  "WEI_COST1": 80000000000000000,
+  "DISPLAY_COST1": 0.08,
+  "GAS_LIMIT": 285000,
+  "MARKETPLACE": "Opeansea",
+  "MARKETPLACE_LINK": "https://opensea.io/collection/",
+  "SHOW_BACKGROUND": true
+}
