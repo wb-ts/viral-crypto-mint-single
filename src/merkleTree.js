@@ -27,12 +27,9 @@ export const getProof = async (address, user) => {
   );
   let proof = tree.getHexProof(leaf);
   if (proof.length > 0) {
-    return { proof: proof };
+    return proof;
   } else {
-    return {
-      proof:
-        "0x0000000000000000000000000000000000000000000000000000000000000000",
-    };
+    return ["0x0000000000000000000000000000000000000000000000000000000000000000"];
   }
 }
 
