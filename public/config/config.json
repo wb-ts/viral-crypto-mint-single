@@ -1,6 +1,6 @@
 {
-  "CONTRACT_ADDRESS": "0xA47f4C7189c5a81AC3a97b6B1Bd0794B3a05d2bB",
-  "SCAN_LINK": "https://etherscan.io/address/0xA47f4C7189c5a81AC3a97b6B1Bd0794B3a05d2bB",
+  "CONTRACT_ADDRESS": "0x38e2B23f5468202Ed989B97f72e31493f3C7e629",
+  "SCAN_LINK": "https://etherscan.io/address/0x38e2B23f5468202Ed989B97f72e31493f3C7e629",
   "NETWORK": {
     "NAME": "Rinkeby Test Network",
     "SYMBOL": "ETH",
@@ -14,6 +14,6 @@
   "DISPLAY_COST1": 0.08,
   "GAS_LIMIT": 285000,
   "MARKETPLACE": "Opeansea",
-  "MARKETPLACE_LINK": "https://opensea.io/collection/0xA47f4C7189c5a81AC3a97b6B1Bd0794B3a05d2bB",
+  "MARKETPLACE_LINK": "https://opensea.io/collection/0x38e2B23f5468202Ed989B97f72e31493f3C7e629",
   "SHOW_BACKGROUND": true
 }
