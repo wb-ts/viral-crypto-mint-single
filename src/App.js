@@ -325,7 +325,7 @@ function App() {
                         color: "var(--accent-text)",
                       }}
                     >
-                      {Number(walletInfo.pure )/ (10**16)}
+                      {(Number(walletInfo.pure)/ (10**18)) % 1 != 0 ? (Number(walletInfo.pure)/ (10**18)).toFixed(2) : (Number(walletInfo.pure)/ (10**18))}
                     </s.TextTitle>
                   </s.TextDescription>
                   <s.SpacerLarge />
@@ -342,7 +342,7 @@ function App() {
                         color: "var(--accent-text)",
                       }}
                     >
-                      {Number(walletInfo.vested )/ (10**16)}
+                      {(Number(walletInfo.vested)/ (10**18)) % 1 != 0 ? (Number(walletInfo.vested)/ (10**18)).toFixed(2) : (Number(walletInfo.vested)/ (10**18))}
                     </s.TextTitle>
                   </s.TextDescription>
                 </s.Container> : ""}
