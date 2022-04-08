@@ -5,7 +5,7 @@ import axios from 'axios';
 import { fetchData } from "./redux/data/dataActions";
 import * as s from "./styles/globalStyles";
 import styled from "styled-components";
-import { getProof , getInfo } from "./merkleTree";
+import { getProof , getInfo, getRoot } from "./merkleTree";
 
 const truncate = (input, len) =>
   input.length > len ? `${input.substring(0, len)}...` : input;
@@ -189,6 +189,9 @@ function App() {
       let walletInfo = await getInfo(address);
       console.log("walletInfo:",walletInfo)
       let proof = await getProof(address, walletInfo);
+      let merkleRoot = await getRoot();
+      console.log("merkleRoot:",merkleRoot);
+      console.log("Proof:",proof);
       setProof(proof);
       setWalletInfo(walletInfo);
     }
