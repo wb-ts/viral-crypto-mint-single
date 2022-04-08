@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { connect , getSmartContract } from "./redux/blockchain/blockchainActions";
+import { connect, getSmartContract } from "./redux/blockchain/blockchainActions";
 import axios from 'axios';
 import { fetchData } from "./redux/data/dataActions";
 import * as s from "./styles/globalStyles";
@@ -107,9 +107,9 @@ function App() {
   const blockchain = useSelector((state) => state.blockchain);
   const MORALIS_API_KEY = '78KU4WCpkqjIAkGjSKbtRuYg7rjbfnEQkMtt6fLbVFh7chlqi3courfnXFjo461K';
   const data = useSelector((state) => state.data);
-  const [mintedCount , setMintedCount] = useState(null);
+  const [mintedCount, setMintedCount] = useState(null);
   const [claimingNft, setClaimingNft] = useState(false);
-  const [feedback, setFeedback] = useState(`Click Mint below to obtain your Sentinel NFT.`);
+  const [feedback, setFeedback] = useState(`Click Claim below to claim whitelisted.`);
   const [mintAmount, setMintAmount] = useState(1);
   const [CONFIG, SET_CONFIG] = useState({
     CONTRACT_ADDRESS: "",
@@ -130,43 +130,43 @@ function App() {
     SHOW_BACKGROUND: false,
   });
 
-  const claimNFTs = (nftID) => {
-    let cost;
-    if(nftID == 0){
-      cost = CONFIG.WEI_COST1;
-    }    
-    let gasLimit = CONFIG.GAS_LIMIT;
-    let totalCostWei = String(cost);
-    let totalGasLimit = String(gasLimit);
-    console.log("Cost: ", totalCostWei);
-    console.log("Gas limit: ", totalGasLimit);
-    setFeedback(`Minting your ${CONFIG.NFT_NAME}...`);
-    setClaimingNft(true);
-    blockchain.smartContract.methods
-      .mint([])
-      .send({
-        gasLimit: String(totalGasLimit),
-        to: CONFIG.CONTRACT_ADDRESS,
-        from: blockchain.account,
-        value: totalCostWei,
-      })
-      .once("error", (err) => {
-        console.log(err);
-        setFeedback("Sorry, something went wrong please try again later.");
-        setClaimingNft(false);
-      })
-      .then((receipt) => {
-        console.log(receipt);
-        setFeedback(
-          `WOW, the ${CONFIG.NFT_NAME} is yours! go visit Opensea.io to view it.`
-        );
-        setClaimingNft(false);
-        dispatch(fetchData(blockchain.account));
-        setMintAmount(1);
-      });
-      
-      
-  };
+  // const claimNFTs = (nftID) => {
+  //   let cost;
+  //   if(nftID == 0){
+  //     cost = CONFIG.WEI_COST1;
+  //   }    
+  //   let gasLimit = CONFIG.GAS_LIMIT;
+  //   let totalCostWei = String(cost);
+  //   let totalGasLimit = String(gasLimit);
+  //   console.log("Cost: ", totalCostWei);
+  //   console.log("Gas limit: ", totalGasLimit);
+  //   setFeedback(`Minting your ${CONFIG.NFT_NAME}...`);
+  //   setClaimingNft(true);
+  //   blockchain.smartContract.methods
+  //     .mint([])
+  //     .send({
+  //       gasLimit: String(totalGasLimit),
+  //       to: CONFIG.CONTRACT_ADDRESS,
+  //       from: blockchain.account,
+  //       value: totalCostWei,
+  //     })
+  //     .once("error", (err) => {
+  //       console.log(err);
+  //       setFeedback("Sorry, something went wrong please try again later.");
+  //       setClaimingNft(false);
+  //     })
+  //     .then((receipt) => {
+  //       console.log(receipt);
+  //       setFeedback(
+  //         `WOW, the ${CONFIG.NFT_NAME} is yours! go visit Opensea.io to view it.`
+  //       );
+  //       setClaimingNft(false);
+  //       dispatch(fetchData(blockchain.account));
+  //       setMintAmount(1);
+  //     });
+
+
+  // };
 
   // const decrementMintAmount = () => {
   //   let newMintAmount = mintAmount - 1;
@@ -200,12 +200,12 @@ function App() {
     const config = await configResponse.json();
 
     let res = await axios.get(`https://deep-index.moralis.io/api/v2/nft/${config.CONTRACT_ADDRESS}`, {
-        headers: {
-            "Content-type": "application/json",
-            "X-API-Key": MORALIS_API_KEY
-        }
+      headers: {
+        "Content-type": "application/json",
+        "X-API-Key": MORALIS_API_KEY
+      }
     })
-    
+
     let mintedCount = res.data.result[0].amount;
 
     setMintedCount(mintedCount);
@@ -244,7 +244,7 @@ function App() {
               fontSize: "20px"
             }}
           >
-            The Sentinel gives passage into Viral Crypto. 
+            The Sentinel gives passage into Viral Crypto.
           </s.TextDescription>
           <s.SpacerSmall />
           <s.TextDescription
@@ -259,7 +259,7 @@ function App() {
           <s.SpacerSmall />
         </s.Container>
         <ResponsiveWrapper flex={1} style={{ padding: 12 }} test>
-        <s.Container
+          <s.Container
             flex={2}
             jc={"center"}
             ai={"center"}
@@ -272,77 +272,42 @@ function App() {
               maxWidth: "700px",
             }}
           >
-            <s.Container flex={1} jc={"center"} ai={"center"}>
-              <StyledImg alt={"example"} src={"/config/images/thesentinel.gif"} />
-            </s.Container>
-            <s.SpacerSmall />
             <s.TextTitle
-                  style={{ textAlign: "center", fontSize: 50, color: "var(--accent-text)" }}
-                >
-                  {CONFIG.SYMBOL1}
-                </s.TextTitle>
-            <s.TextTitle
-              style={{
-                textAlign: "center",
-                fontSize: 42,
-                fontWeight: "bold",
-                color: "var(--accent-text)",
-              }}
+              style={{ textAlign: "center", fontSize: 50, color: "var(--accent-text)" }}
             >
-              {mintedCount} / {CONFIG.MAX_SUPPLY1}
+              {CONFIG.SYMBOL1}
             </s.TextTitle>
-            <s.TextTitle
-                  style={{ textAlign: "center", color: "var(--accent-text)" }}
-                >
-                  {CONFIG.DISPLAY_COST1}{" "}
-                  {CONFIG.NETWORK.SYMBOL}{" "}Each
-                </s.TextTitle>
-                <s.TextDescription
-                  style={{ textAlign: "center", color: "var(--accent-text)" }}
-                >
-                  Limit: 1 per wallet
-                </s.TextDescription>
-                <s.TextDescription
-                  style={{ textAlign: "center", color: "var(--accent-text)" }}
-                >
-                  Excluding gas fees.
-                </s.TextDescription>
-            <s.TextDescription
-              style={{
-                textAlign: "center",
-                color: "var(--primary-text)",
-              }}
-            >
-              <StyledLink target={"_blank"} href={CONFIG.SCAN_LINK}>
-                {truncate(CONFIG.CONTRACT_ADDRESS, 24)}
-              </StyledLink>
-            </s.TextDescription>
-            <span
-              style={{
-                textAlign: "center",
-              }}
-            >
-              {/* <StyledButton
-                onClick={(e) => {
-                  window.open("/config/roadmap.pdf", "_blank");
-                }}
-                style={{
-                  margin: "5px",
-                }}
-              >
-                Roadmap
-              </StyledButton>
-              <StyledButton
-                style={{
-                  margin: "5px",
-                }}
-                onClick={(e) => {
-                  window.open(CONFIG.MARKETPLACE_LINK, "_blank");
-                }}
-              >
-                {CONFIG.MARKETPLACE}
-              </StyledButton> */}
-            </span>
+            {
+              blockchain.account ?
+                <s.Container ai={"center"} jc={"center"} fd={"row"}>
+                  <s.TextDescription>
+                    <s.TextTitle>Non-vested tokens</s.TextTitle>
+                    <s.TextTitle
+                      style={{
+                        textAlign: "center",
+                        fontSize: 42,
+                        fontWeight: "bold",
+                        color: "var(--accent-text)",
+                      }}
+                    >
+                      0
+                    </s.TextTitle>
+                  </s.TextDescription>
+                  <s.SpacerLarge />
+                  <s.TextDescription >
+                    <s.TextTitle>Vested tokens</s.TextTitle>
+                    <s.TextTitle
+                      style={{
+                        textAlign: "center",
+                        fontSize: 42,
+                        fontWeight: "bold",
+                        color: "var(--accent-text)",
+                      }}
+                    >
+                      1000
+                    </s.TextTitle>
+                  </s.TextDescription>
+                </s.Container> : ""}
             <s.SpacerSmall />
             {Number(mintedCount) >= CONFIG.MAX_SUPPLY ? (
               <>
@@ -365,17 +330,8 @@ function App() {
               <>
                 <s.SpacerSmall />
                 {blockchain.account === "" ||
-                blockchain.smartContract === null ? (
+                  blockchain.smartContract === null ? (
                   <s.Container ai={"center"} jc={"center"}>
-                    <s.TextDescription
-                      style={{
-                        textAlign: "center",
-                        color: "var(--accent-text)",
-                      }}
-                    >
-                      Connect to {CONFIG.NETWORK.NAME} for Minted Supply and<br/> obtain The Sentinel
-                    </s.TextDescription>
-                    <s.SpacerSmall />
                     <StyledButton
                       onClick={(e) => {
                         e.preventDefault();
@@ -410,38 +366,6 @@ function App() {
                       {feedback}
                     </s.TextDescription>
                     <s.SpacerMedium />
-                    {/* <s.Container ai={"center"} jc={"center"} fd={"row"}>
-                      <StyledRoundButton
-                        style={{ lineHeight: 0.4 }}
-                        disabled={claimingNft ? 1 : 0}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          decrementMintAmount();
-                        }}
-                      >
-                        -
-                      </StyledRoundButton>
-                      <s.SpacerMedium />
-                      <s.TextDescription
-                        style={{
-                          textAlign: "center",
-                          color: "var(--accent-text)",
-                        }}
-                      >
-                        {mintAmount}
-                      </s.TextDescription>
-                      <s.SpacerMedium />
-                      <StyledRoundButton
-                        disabled={claimingNft ? 1 : 0}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          incrementMintAmount();
-                        }}
-                      >
-                        +
-                      </StyledRoundButton>
-                    </s.Container> */}
-                    
                     <s.Container ai={"center"} jc={"center"} fd={"row"}>
                       <StyledButton
                         disabled={claimingNft ? 1 : 0}
@@ -451,7 +375,7 @@ function App() {
                           getData();
                         }}
                       >
-                        {claimingNft ? "BUSY" : "Mint"}
+                        {claimingNft ? "BUSY" : "Claim"}
                       </StyledButton>
                     </s.Container>
                   </>
@@ -460,11 +384,11 @@ function App() {
             )}
             <s.SpacerMedium />
           </s.Container>
-         
+
         </ResponsiveWrapper>
         <s.SpacerLarge />
         <s.SpacerLarge />
-        <s.Container jc={"center"} ai={"center"} style={{ width: "70%" }}>
+        {/* <s.Container jc={"center"} ai={"center"} style={{ width: "70%" }}>
           <s.TextDescription
             style={{
               textAlign: "center",
@@ -486,7 +410,7 @@ function App() {
             successfully mint your NFT. We recommend that you don't lower the
             gas limit.
           </s.TextDescription>
-        </s.Container>
+        </s.Container> */}
       </s.Container>
     </s.Screen>
   );
