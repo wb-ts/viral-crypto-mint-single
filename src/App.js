@@ -392,7 +392,16 @@ function App() {
                     </s.Container>
                   </>
                   :
-                  ""
+                  <s.Container ai={"center"} jc={"center"}>
+                    <StyledButton
+                      disabled={true}
+                      style={{
+                        background: "grey"
+                      }}
+                    >
+                      Nothing to claim.
+                    </StyledButton>
+                  </s.Container>
                 )}
               </>
             )}
