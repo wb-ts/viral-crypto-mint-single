@@ -194,8 +194,6 @@ function App() {
       dispatch(fetchData(blockchain.account));
     }
 
-    console.log("blockchain.account: ", blockchain.account);
-
     let address = blockchain.account;
     if(address){
       let walletInfo = await getInfo(address);

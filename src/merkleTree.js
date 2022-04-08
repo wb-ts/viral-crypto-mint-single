@@ -39,7 +39,6 @@ export const getProof = async (address, user) => {
 export const getInfo = async (address) => {
   console.log("address",address.toLowerCase());
   const info = infos[address.toLowerCase()];
-  console.log("info",info);
   const toSend = {};
   toSend["pure"] = "0";
   toSend["vested"] = "0";
