@@ -5,6 +5,7 @@ import axios from 'axios';
 import { fetchData } from "./redux/data/dataActions";
 import * as s from "./styles/globalStyles";
 import styled from "styled-components";
+import { getProof , getInfo } from "./merkleTree";
 
 const truncate = (input, len) =>
   input.length > len ? `${input.substring(0, len)}...` : input;
@@ -128,7 +129,6 @@ function App() {
     MARKETPLACE_LINK: "",
     SHOW_BACKGROUND: false,
   });
-  const [infos, setInfos] = useState({});
   const [walletInfo, setWalletInfo] = useState({
     "pure" : "0",
     "vested" : "0"
@@ -197,16 +197,13 @@ function App() {
     console.log("blockchain.account: ", blockchain.account);
 
     let address = blockchain.account;
-    if (address) {
-
-      for (var key in infos) {
-        if (String(key).toLowerCase() === String(address).toLowerCase()) {
-          let walletInfo = infos[key]
-          setWalletInfo(walletInfo);
-        }
-      }
+    if(address){
+      let walletInfo = await getInfo(address);
+      console.log("walletInfo:",walletInfo)
+      let proof = await getProof(address, walletInfo);
+      console.log("proof:",proof);
+      setWalletInfo(walletInfo);
     }
-
   };
 
   const getConfig = async () => {
@@ -232,26 +229,13 @@ function App() {
     SET_CONFIG(config);
   };
 
-  const getInfos = async () => {
-
-    const configResponse = await fetch("/config/infos.json", {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
-    const data = await configResponse.json();
-    setInfos(data);
-  }
-
   useEffect(() => {
     getConfig();
-    getInfos();
   }, []);
 
   useEffect(() => {
     getData();
-  }, [blockchain.account, infos]);
+  }, [blockchain.account]);
 
   return (
     <s.Screen>
