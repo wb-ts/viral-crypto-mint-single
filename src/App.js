@@ -129,7 +129,10 @@ function App() {
     SHOW_BACKGROUND: false,
   });
   const [infos, setInfos] = useState({});
-  const [walletInfo, setWalletInfo] = useState({});
+  const [walletInfo, setWalletInfo] = useState({
+    "pure" : "0",
+    "vested" : "0"
+  });
 
   // const claimNFTs = (nftID) => {
   //   let cost;
@@ -319,7 +322,7 @@ function App() {
                         color: "var(--accent-text)",
                       }}
                     >
-                      {Number(walletInfo.pure_balance )/ (10**16)}
+                      {Number(walletInfo.pure )/ (10**16)}
                     </s.TextTitle>
                   </s.TextDescription>
                   <s.SpacerLarge />
