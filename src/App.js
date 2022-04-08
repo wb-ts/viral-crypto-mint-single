@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, isValidElement } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { connect, getSmartContract } from "./redux/blockchain/blockchainActions";
 import axios from 'axios';
@@ -110,7 +110,6 @@ function App() {
   const [mintedCount, setMintedCount] = useState(null);
   const [claimingNft, setClaimingNft] = useState(false);
   const [feedback, setFeedback] = useState(`Click Claim below to claim whitelisted.`);
-  const [mintAmount, setMintAmount] = useState(1);
   const [CONFIG, SET_CONFIG] = useState({
     CONTRACT_ADDRESS: "",
     SCAN_LINK: "",
@@ -120,7 +119,7 @@ function App() {
       ID: 0,
     },
     NFT_NAME: "",
-    SYMBOL: "",
+    SYMBOL1: "",
     MAX_SUPPLY: 1,
     WEI_COST: 0,
     DISPLAY_COST: 0,
@@ -129,6 +128,8 @@ function App() {
     MARKETPLACE_LINK: "",
     SHOW_BACKGROUND: false,
   });
+  const [infos, setInfos] = useState({});
+  const [walletInfo, setWalletInfo] = useState({});
 
   // const claimNFTs = (nftID) => {
   //   let cost;
@@ -184,10 +185,25 @@ function App() {
   //   setMintAmount(newMintAmount);
   // };
 
-  const getData = () => {
+
+  const getData = async () => {
     if (blockchain.account !== "" && blockchain.smartContract !== null) {
       dispatch(fetchData(blockchain.account));
     }
+
+    console.log("blockchain.account: ", blockchain.account);
+
+    let address = blockchain.account;
+    if (address) {
+
+      for (var key in infos) {
+        if (String(key).toLowerCase() === String(address).toLowerCase()) {
+          let walletInfo = infos[key]
+          setWalletInfo(walletInfo);
+        }
+      }
+    }
+
   };
 
   const getConfig = async () => {
@@ -213,13 +229,26 @@ function App() {
     SET_CONFIG(config);
   };
 
+  const getInfos = async () => {
+
+    const configResponse = await fetch("/config/infos.json", {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    const data = await configResponse.json();
+    setInfos(data);
+  }
+
   useEffect(() => {
     getConfig();
+    getInfos();
   }, []);
 
   useEffect(() => {
     getData();
-  }, [blockchain.account]);
+  }, [blockchain.account, infos]);
 
   return (
     <s.Screen>
@@ -290,7 +319,7 @@ function App() {
                         color: "var(--accent-text)",
                       }}
                     >
-                      0
+                      {Number(walletInfo.pure_balance )/ (10**16)}
                     </s.TextTitle>
                   </s.TextDescription>
                   <s.SpacerLarge />
@@ -304,7 +333,7 @@ function App() {
                         color: "var(--accent-text)",
                       }}
                     >
-                      1000
+                      {walletInfo.vested}
                     </s.TextTitle>
                   </s.TextDescription>
                 </s.Container> : ""}
