@@ -112,6 +112,7 @@ function App() {
   const [claiming, setClaiming] = useState(false);
   const [feedback, setFeedback] = useState(`Click Claim below to claim whitelisted.`);
   const [proof , setProof] = useState([]);
+  const [isWhitelisted , setIswhitelisted] = useState(false);
   const [CONFIG, SET_CONFIG] = useState({
     CONTRACT_ADDRESS: "",
     SCAN_LINK: "",
@@ -156,7 +157,6 @@ function App() {
         );
         setClaiming(false);
         dispatch(fetchData(blockchain.account));
-        setMintAmount(1);
       });
 
 
@@ -178,6 +178,10 @@ function App() {
   //   setMintAmount(newMintAmount);
   // };
 
+  const verifyClaimBytes = async (address , pure , vested , proof) => {
+    let res = await blockchain.smartContract.methods.verifyClaimBytes(address , pure , vested , proof).call();
+    return res;
+  }
 
   const getData = async () => {
     // if (blockchain.account !== "" && blockchain.smartContract !== null) {
@@ -194,6 +198,8 @@ function App() {
       console.log("Proof:",proof);
       setProof(proof);
       setWalletInfo(walletInfo);
+      let isWhitelisted = await verifyClaimBytes( address , walletInfo.pure , walletInfo.vested , proof) ;
+      setIswhitelisted(isWhitelisted);
     }
   };
 
@@ -361,6 +367,7 @@ function App() {
                     ) : null}
                   </s.Container>
                 ) : (
+                  isWhitelisted ? 
                   <>
                     <s.TextDescription
                       style={{
@@ -384,6 +391,8 @@ function App() {
                       </StyledButton>
                     </s.Container>
                   </>
+                  :
+                  ""
                 )}
               </>
             )}
