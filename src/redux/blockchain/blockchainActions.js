@@ -31,6 +31,35 @@ const updateAccountRequest = (payload) => {
   };
 };
 
+const switchNetwork = async () => {
+  const { ethereum } = window;
+  try {
+    await ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: '0x4' }],
+    });
+  } catch (switchError) {
+    // This error code indicates that the chain has not been added to MetaMask.
+    if (switchError.code === 4902) {
+      try {
+        await ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: '0x4',
+              chainName: 'Rinkeby Test Network',
+              rpcUrls: ['https://rinkeby.infura.io/v3/'] /* ... */,
+            },
+          ],
+        });
+      } catch (addError) {
+        // handle "add" error
+      }
+    }
+    // handle other "switch" errors
+  }
+}
+
 export const connect = () => {
   return async (dispatch) => {
     dispatch(connectRequest());
@@ -60,29 +89,24 @@ export const connect = () => {
         const networkId = await ethereum.request({
           method: "net_version",
         });
-        if (networkId == CONFIG.NETWORK.ID) {
-          const SmartContractObj = new Web3EthContract(
-            abi,
-            CONFIG.CONTRACT_ADDRESS
-          );
-          dispatch(
-            connectSuccess({
-              account: accounts[0],
-              smartContract: SmartContractObj,
-              web3: web3,
-            })
-          );
-          // Add listeners start
-          ethereum.on("accountsChanged", (accounts) => {
-            dispatch(updateAccount(accounts[0]));
-          });
-          ethereum.on("chainChanged", () => {
-            window.location.reload();
-          });
-          // Add listeners end
-        } else {
-          dispatch(connectFailed(`Change network to ${CONFIG.NETWORK.NAME}.`));
-        }
+        
+        if (networkId != CONFIG.NETWORK.ID) await switchNetwork();
+        
+        const SmartContractObj = new Web3EthContract(
+          abi,
+          CONFIG.CONTRACT_ADDRESS
+        );
+        dispatch(
+          connectSuccess({
+            account: accounts[0],
+            smartContract: SmartContractObj,
+            web3: web3,
+          })
+        );
+        // Add listeners start
+        ethereum.on("accountsChanged", (accounts) => {
+          dispatch(updateAccount(accounts[0]));
+        });
       } catch (err) {
         dispatch(connectFailed("Something went wrong."));
       }

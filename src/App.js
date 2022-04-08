@@ -109,8 +109,9 @@ function App() {
   const MORALIS_API_KEY = '78KU4WCpkqjIAkGjSKbtRuYg7rjbfnEQkMtt6fLbVFh7chlqi3courfnXFjo461K';
   const data = useSelector((state) => state.data);
   const [mintedCount, setMintedCount] = useState(null);
-  const [claimingNft, setClaimingNft] = useState(false);
+  const [claiming, setClaiming] = useState(false);
   const [feedback, setFeedback] = useState(`Click Claim below to claim whitelisted.`);
+  const [proof , setProof] = useState([]);
   const [CONFIG, SET_CONFIG] = useState({
     CONTRACT_ADDRESS: "",
     SCAN_LINK: "",
@@ -134,43 +135,32 @@ function App() {
     "vested" : "0"
   });
 
-  // const claimNFTs = (nftID) => {
-  //   let cost;
-  //   if(nftID == 0){
-  //     cost = CONFIG.WEI_COST1;
-  //   }    
-  //   let gasLimit = CONFIG.GAS_LIMIT;
-  //   let totalCostWei = String(cost);
-  //   let totalGasLimit = String(gasLimit);
-  //   console.log("Cost: ", totalCostWei);
-  //   console.log("Gas limit: ", totalGasLimit);
-  //   setFeedback(`Minting your ${CONFIG.NFT_NAME}...`);
-  //   setClaimingNft(true);
-  //   blockchain.smartContract.methods
-  //     .mint([])
-  //     .send({
-  //       gasLimit: String(totalGasLimit),
-  //       to: CONFIG.CONTRACT_ADDRESS,
-  //       from: blockchain.account,
-  //       value: totalCostWei,
-  //     })
-  //     .once("error", (err) => {
-  //       console.log(err);
-  //       setFeedback("Sorry, something went wrong please try again later.");
-  //       setClaimingNft(false);
-  //     })
-  //     .then((receipt) => {
-  //       console.log(receipt);
-  //       setFeedback(
-  //         `WOW, the ${CONFIG.NFT_NAME} is yours! go visit Opensea.io to view it.`
-  //       );
-  //       setClaimingNft(false);
-  //       dispatch(fetchData(blockchain.account));
-  //       setMintAmount(1);
-  //     });
+  const claim = () => {
+    
+    blockchain.smartContract.methods
+      .claim(walletInfo.vested, walletInfo.pure, proof)
+      .send({
+        gasLimit: String(CONFIG.GAS_LIMIT),
+        to: CONFIG.CONTRACT_ADDRESS,
+        from: blockchain.account,
+      })
+      .once("error", (err) => {
+        console.log(err);
+        setFeedback("Sorry, something went wrong please try again later.");
+        setClaiming(false);
+      })
+      .then((receipt) => {
+        console.log(receipt);
+        setFeedback(
+          `WOW, claimed successfully.`
+        );
+        setClaiming(false);
+        dispatch(fetchData(blockchain.account));
+        setMintAmount(1);
+      });
 
 
-  // };
+  };
 
   // const decrementMintAmount = () => {
   //   let newMintAmount = mintAmount - 1;
@@ -190,16 +180,16 @@ function App() {
 
 
   const getData = async () => {
-    if (blockchain.account !== "" && blockchain.smartContract !== null) {
-      dispatch(fetchData(blockchain.account));
-    }
+    // if (blockchain.account !== "" && blockchain.smartContract !== null) {
+    //   dispatch(fetchData(blockchain.account));
+    // }
 
     let address = blockchain.account;
     if(address){
       let walletInfo = await getInfo(address);
       console.log("walletInfo:",walletInfo)
       let proof = await getProof(address, walletInfo);
-      console.log("proof:",proof);
+      setProof(proof);
       setWalletInfo(walletInfo);
     }
   };
@@ -213,16 +203,7 @@ function App() {
     });
     const config = await configResponse.json();
 
-    let res = await axios.get(`https://deep-index.moralis.io/api/v2/nft/${config.CONTRACT_ADDRESS}`, {
-      headers: {
-        "Content-type": "application/json",
-        "X-API-Key": MORALIS_API_KEY
-      }
-    })
-
-    let mintedCount = res.data.result[0].amount;
-
-    setMintedCount(mintedCount);
+    
 
     SET_CONFIG(config);
   };
@@ -389,14 +370,14 @@ function App() {
                     <s.SpacerMedium />
                     <s.Container ai={"center"} jc={"center"} fd={"row"}>
                       <StyledButton
-                        disabled={claimingNft ? 1 : 0}
+                        disabled={claiming ? 1 : 0}
                         onClick={(e) => {
                           e.preventDefault();
-                          claimNFTs(0);
+                          claim();
                           getData();
                         }}
                       >
-                        {claimingNft ? "BUSY" : "Claim"}
+                        {claiming ? "BUSY" : "Claim"}
                       </StyledButton>
                     </s.Container>
                   </>

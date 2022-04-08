@@ -1,10 +1,10 @@
 {
-  "CONTRACT_ADDRESS": "0x9dd13E8Fce9e6dE73D2Df9e3411C93F04E28AF2B",
-  "SCAN_LINK": "https://etherscan.io/address/0x9dd13e8fce9e6de73d2df9e3411c93f04e28af2b",
+  "CONTRACT_ADDRESS": "0xA47f4C7189c5a81AC3a97b6B1Bd0794B3a05d2bB",
+  "SCAN_LINK": "https://etherscan.io/address/0xA47f4C7189c5a81AC3a97b6B1Bd0794B3a05d2bB",
   "NETWORK": {
-    "NAME": "Ethereum Mainnet",
+    "NAME": "Rinkeby Test Network",
     "SYMBOL": "ETH",
-    "ID": 1
+    "ID": 4
   },
   "NFT_NAME": "Claim VCX tokens",
   "SYMBOL1": "Claim VCX tokens",
@@ -14,6 +14,6 @@
   "DISPLAY_COST1": 0.08,
   "GAS_LIMIT": 285000,
   "MARKETPLACE": "Opeansea",
-  "MARKETPLACE_LINK": "https://opensea.io/collection/",
+  "MARKETPLACE_LINK": "https://opensea.io/collection/0xA47f4C7189c5a81AC3a97b6B1Bd0794B3a05d2bB",
   "SHOW_BACKGROUND": true
 }
