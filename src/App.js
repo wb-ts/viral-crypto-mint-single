@@ -314,7 +314,8 @@ function App() {
                 <s.Container ai={"center"} jc={"center"} fd={"row"}>
                   <s.TextDescription 
                     style={{
-                      textAlign:"center"
+                      textAlign:"center",
+                      margin: "0 10px 0 10px"
                     }}>
                     <s.TextTitle>Non-vested tokens</s.TextTitle>
                     <s.TextTitle
@@ -328,10 +329,10 @@ function App() {
                       {(Number(walletInfo.pure)/ (10**18)) % 1 != 0 ? (Number(walletInfo.pure)/ (10**18)).toFixed(2) : (Number(walletInfo.pure)/ (10**18))}
                     </s.TextTitle>
                   </s.TextDescription>
-                  <s.SpacerLarge />
                   <s.TextDescription 
                     style={{
-                      textAlign:"center"
+                      textAlign:"center",
+                      margin: "0 10px 0 10px"
                     }}>
                     <s.TextTitle>Vested tokens</s.TextTitle>
                     <s.TextTitle
