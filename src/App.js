@@ -312,7 +312,10 @@ function App() {
             {
               blockchain.account ?
                 <s.Container ai={"center"} jc={"center"} fd={"row"}>
-                  <s.TextDescription>
+                  <s.TextDescription 
+                    style={{
+                      textAlign:"center"
+                    }}>
                     <s.TextTitle>Non-vested tokens</s.TextTitle>
                     <s.TextTitle
                       style={{
@@ -326,7 +329,10 @@ function App() {
                     </s.TextTitle>
                   </s.TextDescription>
                   <s.SpacerLarge />
-                  <s.TextDescription >
+                  <s.TextDescription 
+                    style={{
+                      textAlign:"center"
+                    }}>
                     <s.TextTitle>Vested tokens</s.TextTitle>
                     <s.TextTitle
                       style={{
@@ -336,7 +342,7 @@ function App() {
                         color: "var(--accent-text)",
                       }}
                     >
-                      {walletInfo.vested}
+                      {Number(walletInfo.vested )/ (10**16)}
                     </s.TextTitle>
                   </s.TextDescription>
                 </s.Container> : ""}
